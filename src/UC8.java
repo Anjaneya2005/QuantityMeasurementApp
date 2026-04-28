@@ -1,4 +1,4 @@
-public class UC7 {
+public class UC8 {
 
     enum LengthUnit {
         FEET(1.0),
@@ -12,12 +12,12 @@ public class UC7 {
             this.toFeet = toFeet;
         }
 
-        public double toFeet(double value) {
+        public double toBase(double value) {
             return value * toFeet;
         }
 
-        public double fromFeet(double feet) {
-            return feet / toFeet;
+        public double fromBase(double base) {
+            return base / toFeet;
         }
     }
 
@@ -33,15 +33,14 @@ public class UC7 {
             this.unit = unit;
         }
 
-        // 🔥 UC7 METHOD
+        // 🔥 Clean UC8 method
         public Quantity add(Quantity other, LengthUnit targetUnit) {
 
-            double v1 = this.unit.toFeet(this.value);
-            double v2 = other.unit.toFeet(other.value);
+            double baseSum =
+                    unit.toBase(value) +
+                            other.unit.toBase(other.value);
 
-            double sumFeet = v1 + v2;
-
-            double result = targetUnit.fromFeet(sumFeet);
+            double result = targetUnit.fromBase(baseSum);
 
             return new Quantity(result, targetUnit);
         }
@@ -54,9 +53,9 @@ public class UC7 {
 
     public static void main(String[] args) {
 
-        Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity q2 = new Quantity(12.0, LengthUnit.INCH);
+        Quantity q1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity q2 = new Quantity(1.0, LengthUnit.FEET);
 
-        System.out.println(q1.add(q2, LengthUnit.INCH)); // 24 inches
+        System.out.println(q1.add(q2, LengthUnit.FEET)); // 4 feet
     }
 }

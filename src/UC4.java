@@ -1,9 +1,11 @@
-public class UC3 {
+public class UC4 {
 
-    // Enum for units
+    // Enum with more units
     enum LengthUnit {
         FEET(1.0),
-        INCH(1.0 / 12.0); // 1 inch = 1/12 feet
+        INCH(1.0 / 12.0),
+        YARD(3.0), // 1 yard = 3 feet
+        CM(0.393701 / 12.0); // 1 cm = 0.393701 inch → convert to feet
 
         private final double toFeet;
 
@@ -16,7 +18,7 @@ public class UC3 {
         }
     }
 
-    // Generic Quantity class
+    // Same Quantity class (NO CHANGE from UC3)
     static class Quantity {
         private final double value;
         private final LengthUnit unit;
@@ -38,18 +40,23 @@ public class UC3 {
 
             Quantity other = (Quantity) obj;
 
-            double thisInFeet = this.unit.toFeet(this.value);
-            double otherInFeet = other.unit.toFeet(other.value);
+            double v1 = this.unit.toFeet(this.value);
+            double v2 = other.unit.toFeet(other.value);
 
-            return Double.compare(thisInFeet, otherInFeet) == 0;
+            return Double.compare(v1, v2) == 0;
         }
     }
 
     public static void main(String[] args) {
 
-        Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity q2 = new Quantity(12.0, LengthUnit.INCH);
+        Quantity q1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity q2 = new Quantity(3.0, LengthUnit.FEET);
 
-        System.out.println("Equal: " + q1.equals(q2));
+        System.out.println("Yard to Feet Equal: " + q1.equals(q2));
+
+        Quantity q3 = new Quantity(1.0, LengthUnit.CM);
+        Quantity q4 = new Quantity(0.393701, LengthUnit.INCH);
+
+        System.out.println("CM to Inch Equal: " + q3.equals(q4));
     }
 }

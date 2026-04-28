@@ -1,4 +1,4 @@
-public class UC6 {
+public class UC7 {
 
     enum LengthUnit {
         FEET(1.0),
@@ -16,41 +16,34 @@ public class UC6 {
             return value * toFeet;
         }
 
-        public double fromFeet(double feetValue) {
-            return feetValue / toFeet;
+        public double fromFeet(double feet) {
+            return feet / toFeet;
         }
     }
 
-    // Quantity class
     static class Quantity {
         private final double value;
         private final LengthUnit unit;
 
         public Quantity(double value, LengthUnit unit) {
             if (unit == null || !Double.isFinite(value)) {
-                throw new IllegalArgumentException("Invalid input");
+                throw new IllegalArgumentException();
             }
             this.value = value;
             this.unit = unit;
         }
 
-        // 🔥 ADD METHOD (core of UC6)
-        public Quantity add(Quantity other) {
+        // 🔥 UC7 METHOD
+        public Quantity add(Quantity other, LengthUnit targetUnit) {
 
-            if (other == null) {
-                throw new IllegalArgumentException("Other cannot be null");
-            }
-
-            // convert both to base unit (feet)
             double v1 = this.unit.toFeet(this.value);
             double v2 = other.unit.toFeet(other.value);
 
             double sumFeet = v1 + v2;
 
-            // convert back to FIRST operand unit
-            double result = this.unit.fromFeet(sumFeet);
+            double result = targetUnit.fromFeet(sumFeet);
 
-            return new Quantity(result, this.unit);
+            return new Quantity(result, targetUnit);
         }
 
         @Override
@@ -64,7 +57,6 @@ public class UC6 {
         Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
         Quantity q2 = new Quantity(12.0, LengthUnit.INCH);
 
-        System.out.println(q1.add(q2)); // 2 feet
-        System.out.println(q2.add(q1)); // 24 inches
+        System.out.println(q1.add(q2, LengthUnit.INCH)); // 24 inches
     }
 }

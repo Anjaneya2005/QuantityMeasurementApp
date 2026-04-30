@@ -1,4 +1,4 @@
-public class UC10 {
+public class UC11 {
 
     // 🔥 INTERFACE
     interface IMeasurable {
@@ -6,17 +6,15 @@ public class UC10 {
         double fromBase(double base);
     }
 
-    // 🔥 LENGTH UNIT
-    enum LengthUnit implements IMeasurable {
+    // 🔥 VOLUME UNIT
+    enum VolumeUnit implements IMeasurable {
 
-        FEET(1.0),
-        INCH(1.0 / 12.0),
-        YARD(3.0),
-        CM(0.0328084);
+        LITRE(1.0),
+        MILLILITRE(0.001);
 
         private final double factor;
 
-        LengthUnit(double factor) {
+        VolumeUnit(double factor) {
             this.factor = factor;
         }
 
@@ -29,29 +27,7 @@ public class UC10 {
         }
     }
 
-    // 🔥 WEIGHT UNIT
-    enum WeightUnit implements IMeasurable {
-
-        KILOGRAM(1.0),
-        GRAM(0.001),
-        POUND(0.453592);
-
-        private final double factor;
-
-        WeightUnit(double factor) {
-            this.factor = factor;
-        }
-
-        public double toBase(double value) {
-            return value * factor;
-        }
-
-        public double fromBase(double base) {
-            return base / factor;
-        }
-    }
-
-    // 🔥 GENERIC CLASS
+    // 🔥 GENERIC QUANTITY CLASS
     static class Quantity<U extends IMeasurable> {
 
         private final double value;
@@ -75,7 +51,7 @@ public class UC10 {
 
             Quantity<?> other = (Quantity<?>) obj;
 
-            // prevent mixing length & weight
+            // Prevent cross category (safe check)
             if (unit.getClass() != other.unit.getClass()) return false;
 
             double v1 = unit.toBase(value);
@@ -119,26 +95,21 @@ public class UC10 {
         }
     }
 
-    // 🔥 MAIN
+    // 🔥 MAIN METHOD
     public static void main(String[] args) {
 
-        Quantity<LengthUnit> l1 =
-                new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<VolumeUnit> v1 =
+                new Quantity<>(1.0, VolumeUnit.LITRE);
 
-        Quantity<LengthUnit> l2 =
-                new Quantity<>(12.0, LengthUnit.INCH);
+        Quantity<VolumeUnit> v2 =
+                new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
 
-        System.out.println("Length Equal: " + l1.equals(l2));
+        System.out.println("Volume Equal: " + v1.equals(v2));
 
-        Quantity<WeightUnit> w1 =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        System.out.println("Add (Litre): " + v1.add(v2));
 
-        Quantity<WeightUnit> w2 =
-                new Quantity<>(1000.0, WeightUnit.GRAM);
+        System.out.println("Add (ML): " + v1.add(v2, VolumeUnit.MILLILITRE));
 
-        System.out.println("Weight Equal: " + w1.equals(w2));
-
-        System.out.println(l1.add(l2));
-        System.out.println(w1.add(w2));
+        System.out.println("Convert: " + v1.convertTo(VolumeUnit.MILLILITRE));
     }
 }
